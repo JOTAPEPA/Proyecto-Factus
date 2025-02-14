@@ -1,30 +1,69 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <q-layout view="hHh lpR fFf">
+
+<q-header bordered class="bg-primary text-white" id="header">
+  <q-toolbar id="titleBar">
+    <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+
+    <q-toolbar-title id="title">
+      <q-avatar>
+      </q-avatar>
+      Factus
+    </q-toolbar-title>
+  </q-toolbar>
+</q-header>
+
+<q-drawer show-if-above v-model="leftDrawerOpen" side="left" id="leftDrawer">
+  <!-- drawer content -->
+</q-drawer>
+
+<q-page-container>
+  <router-view />
+</q-page-container>
+
+</q-layout>
+
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup>
+import { ref } from 'vue'
+
+const leftDrawerOpen = ref(false)
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+</script>
+
+<style>
+
+#titleBar{
+  background-color: rgb(161,185,207);
+  display: flex;
+  justify-content: center;
+  
+
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+#title{
+  display: flex;
+  justify-content: center;
 }
+
+#leftDrawer{
+  background-color:rgb(213,227,240);
+  
+
+}
+
+header{
+  background-color:rgb(161,185,207);
+  border-bottom: rgb(161,185,207);
+}
+
+.q-header--bordered{
+  border-bottom: 0
+}
+
 </style>
+
