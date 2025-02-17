@@ -1,42 +1,51 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header height-hint="98" id="header">
-      <q-toolbar>
-        <q-toolbar-title id="titleBar">
-          <q-avatar>
-          </q-avatar>
-          Factus
-        </q-toolbar-title>
-      </q-toolbar>
 
-      <q-tabs align="left">
-        <q-route-tab to="/page1" label="Page One" />
-        <q-route-tab to="/page2" label="Page Two" />
-        <q-route-tab to="/page3" label="Page Three" />
-      </q-tabs>
-    </q-header>
+<q-header height-hint="98" id="header">
+ <q-toolbar>
+   <q-toolbar-title id="titleBar">
+     <q-avatar>
+     </q-avatar>
+     Factus
+   </q-toolbar-title>
+ </q-toolbar>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
+ <q-tabs align="left">
+   <q-route-tab to="/page1" label="Page One" />
+   <q-route-tab to="/page2" label="Page Two" />
+   <q-route-tab to="/page3" label="Page Three" />
+ </q-tabs>
+</q-header>
 
-  </q-layout>
+<q-page-container>
+ <router-view />
+</q-page-container>
+
+</q-layout>
+
+
 
 </template>
 
-
 <script setup>
+import { ref } from 'vue'
 
+const leftDrawerOpen = ref(false)
+
+const toggleLeftDrawer = () => {
+ leftDrawerOpen.value = !leftDrawerOpen.value
+}
 </script>
 
 <style>
-#titleBar {
-  display: flex;
-  justify-content: center;
+
+#titleBar{
+ display: flex;
+ justify-content: center;
+}
+#header{
+ background-color: rgb(170,196,230);
+ color: black;
 }
 
-#header {
-  background-color: rgb(170, 196, 230);
-  color: black;
-}
 </style>
