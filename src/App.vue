@@ -40,4 +40,3 @@
   color: black;
 }
 </style>
->>>>>>> 883e1ed352f387d44fce60f83e4a2082972e8d09
