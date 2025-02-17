@@ -1,27 +1,29 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+   <q-layout view="hHh lpR fFf">
 
-<q-header bordered class="bg-primary text-white" id="header">
-  <q-toolbar id="titleBar">
-    <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-    <q-toolbar-title id="title">
+<q-header height-hint="98" id="header">
+  <q-toolbar>
+    <q-toolbar-title id="titleBar">
       <q-avatar>
       </q-avatar>
       Factus
     </q-toolbar-title>
   </q-toolbar>
-</q-header>
 
-<q-drawer show-if-above v-model="leftDrawerOpen" side="left" id="leftDrawer">
-  <!-- drawer content -->
-</q-drawer>
+  <q-tabs align="left">
+    <q-route-tab to="/page1" label="Page One" />
+    <q-route-tab to="/page2" label="Page Two" />
+    <q-route-tab to="/page3" label="Page Three" />
+  </q-tabs>
+</q-header>
 
 <q-page-container>
   <router-view />
 </q-page-container>
 
 </q-layout>
+
+
 
 </template>
 
@@ -38,31 +40,12 @@ const toggleLeftDrawer = () => {
 <style>
 
 #titleBar{
-  background-color: rgb(161,185,207);
-  display: flex;
-  justify-content: center;
-  
-
-}
-
-#title{
   display: flex;
   justify-content: center;
 }
-
-#leftDrawer{
-  background-color:rgb(213,227,240);
-  
-
-}
-
-header{
-  background-color:rgb(161,185,207);
-  border-bottom: rgb(161,185,207);
-}
-
-.q-header--bordered{
-  border-bottom: 0
+#header{
+  background-color: rgb(170,196,230);
+  color: black;
 }
 
 </style>
