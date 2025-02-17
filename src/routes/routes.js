@@ -1,11 +1,11 @@
-import login from '../components/login.vue'
+import SignIn from '../components/SignIn.vue';
 import inicio from '../components/inicio.vue';
 import { createWebHistory, createRouter } from 'vue-router';
 
 const routes = [
 
     {path: '/', component: inicio},
-    {path: '/login', component: login}
+    {path: '/signIn', component: SignIn}
 ]
 
 
