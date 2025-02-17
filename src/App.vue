@@ -1,10 +1,8 @@
-
 <template>
   <q-layout view="hHh lpR fFf">
-
-    <q-header class="bg-primary text-white" height-hint="98" id="header">
-      <q-toolbar  id="headerTitle">
-        <q-toolbar-title>
+    <q-header height-hint="98" id="header">
+      <q-toolbar>
+        <q-toolbar-title id="titleBar">
           <q-avatar>
           </q-avatar>
           Factus
@@ -23,6 +21,7 @@
     </q-page-container>
 
   </q-layout>
+
 </template>
 
 
@@ -31,19 +30,14 @@
 </script>
 
 <style>
-
-#headerTitle {
-  display: grid;
+#titleBar {
+  display: flex;
   justify-content: center;
-  background-color: #9dacc7;
 }
 
 #header {
-  display: grid;
-  background-color: #9dacc7;
-}
-
-bg-primary {
-  background-color: #9dacc7;
+  background-color: rgb(170, 196, 230);
+  color: black;
 }
 </style>
+>>>>>>> 883e1ed352f387d44fce60f83e4a2082972e8d09
