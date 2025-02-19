@@ -9,3 +9,13 @@ export async function getData(url) {
         throw error;
     }
 }
+
+export  async function postData (url, data){
+    try{
+        const response = await apiClient.post (url, data);
+        return response.data
+    } catch (error){
+        console.log("error en la peticion POST", error.response ? error.response.data : error.message);
+        throw error;
+    }
+}

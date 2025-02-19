@@ -5,9 +5,12 @@
                 <h3>Iniciar Sesion</h3>
             </div>
             <div class="inputContainerLogin">
-                <input type="text" placeholder="Usuario" />
-                <input type="password" placeholder="Contraseña" />
-                <button>Iniciar Sesion</button>
+                <input type="text" placeholder="Usuario" v-model="email" />
+                <input type="password" placeholder="Contraseña" v-model="password"/>
+                <button @click="login" :disabled="loading">
+                    <span v-if="loading"> Cargando...</span>
+                    <span v-else> Iniciar Sesion</span>
+                </button>
             </div>
 
         </div>
@@ -15,11 +18,48 @@
 </template>
 
 <script setup>
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {postData} from '../services/apiClient'
+
+const router = useRouter()
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+
+const login = async () => {
+    loading.value = true
+
+    const data = {
+        username: email.value,
+        password: password.value,
+        grant_type: 'password',
+        client_id: import.meta.env.VITE_VUE_APP_CLIENT_ID,
+        client_secret: import.meta.env.VITE_VUE_APP_CLIENT_SECRET,
+    }
+
+    console.log('enviando solicitud:', data);
+
+    try{
+        const response = await postData('/oauth/token', data)
+        console.log('respuuesta recibida:', response);
+        router.replace('/home')
+    } catch (error) {
+        console.log('error al iniciar sesion', error);  
+    }
+    loading.value = false
+}
+
 </script>
 
 <style>
 #header {
     display: none;
+}
+
+.q-page-container{
+    background-image:url('https://www.blogdelfotografo.com/wp-content/uploads/2021/12/fondo_blanco_gris.webp');
+    background-size: cover;
 }
 
 .container {
@@ -78,14 +118,14 @@
     margin: 10px;
     padding: 10px;
     border: none;
-    background-color: #007bff;
+    background-color: #778DA9;
     color: white;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .inputContainerLogin button:hover {
-    background-color: #0056b3;
+    background-color: #415A77;
 }
 
 @keyframes fadeIn {
