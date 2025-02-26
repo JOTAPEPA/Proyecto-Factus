@@ -9,14 +9,6 @@
                     Factus
                 </q-toolbar-title>
             </q-toolbar>
-
-            <q-tabs align="left">
-                <q-tab name ="Facturas" label = "Facturas" @click="navigateTo('/facturas')">"
-                    <q-item-section>Facturas</q-item-section>
-                    </q-tab>
-                 <q-route-tab to="/page2" label="Page Two" />
-                <q-route-tab to="/page3" label="Page Three" />
-            </q-tabs>
         </q-header>
 
         <q-page-container>
@@ -24,17 +16,15 @@
         </q-page-container>
 
     </q-layout>
-
-
-
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const menuVisible = ref(false)
 const leftDrawerOpen = ref(false)
-
+const router = useRouter()
 
 const toggleLeftDrawer = () => {
     leftDrawerOpen.value = !leftDrawerOpen.value
@@ -42,18 +32,33 @@ const toggleLeftDrawer = () => {
 
 const navigateTo = (path) => {
     menuVisible.value = !menuVisible.value
+    router.push(path)
 }
 </script>
 
 <style>
-
-#titleBar{
- display: flex;
- justify-content: center;
-}
-#headerHome{
- background-color: rgb(170,196,230);
- color: black;
+#titleBar {
+    display: flex;
+    justify-content: center;
 }
 
+#headerHome {
+    background-color: rgb(170, 196, 230);
+    color: black;
+}
+
+#desplegableFacturas{
+    background-color:rgb(170,196,230) ;
+    height: 100%;
+    border: none;
+    text-align: center;
+    border-radius: 0;
+}
+
+#desplegableFacturas option{
+    background-color:rgb(170,196,230) ;
+    text-align: center;
+    border-radius:0px ;
+    border-radius: 0;
+}
 </style>

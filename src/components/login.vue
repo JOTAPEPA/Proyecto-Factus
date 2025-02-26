@@ -71,12 +71,13 @@ const login = async () => {
 
 .containerLogin {
     display: grid;
-    background-color: #f1f1f1;
+    background-color: rgba(241, 241, 241, 0.8);
     width: 700px;
     height: 500px;
     animation: fadeIn 1s ease-in-out;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 15px;
+
 }
 
 .containerLogin:hover {
@@ -89,7 +90,6 @@ const login = async () => {
     justify-content: center;
     align-items: center;
     height: 100px;
-    background-color: #f1f1f1;
     border-radius: 15px 15px 0 0;
 }
 
