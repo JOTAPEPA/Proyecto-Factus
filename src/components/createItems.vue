@@ -10,22 +10,9 @@
                 </q-toolbar-title>
             </q-toolbar>
             <q-tabs align="left">
-                <nav id="opcionesNavegacion">
-                    <ul>
-                        <li>Facturas
-                            <ul>
-                                <li>Crear factura</li>
-                                <li>Ver factura</li>
-                            </ul>
-                        </li>
-                        <li>Productos
-                            <ul>
-                                <li>Agregar producto</li>
-                                <li>Ver productos</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
+                <q-route-tab to="/createFactura" label="Crear Factura" />
+                <q-route-tab to="/createItems" label="Crear Items" />
+                <q-route-tab to="/page3" label="Page Three" />
             </q-tabs>
         </q-header>
 
@@ -40,7 +27,7 @@
                     <q-input outlined v-model="descripcionProducto" label="Descripcion del producto" />
                     <q-btn @click="crearProducto" label="Crear Producto" />
                 </div>
-               
+
             </div>
 
         </q-page-container>

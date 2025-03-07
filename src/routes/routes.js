@@ -18,13 +18,13 @@ const routes = [
     },
 
     {
-        path:'/crFactura',
-        name:'crFactura',
+        path:'/createFactura',
+        name:'createFactura',
         component: createFactura
     },
     {
-        path:'/crItem',
-        name:'crItem',
+        path:'/createItems',
+        name:'createItem',
         component: createItem
     }
 ]
