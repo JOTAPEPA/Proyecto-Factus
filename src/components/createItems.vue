@@ -18,18 +18,24 @@
 
         <q-page-container>
             <router-view />
-            <div id="containerPrincipal">
-                <h3>Ingresar Producto</h3>
-                <div>
-                    <q-input outlined v-model="nombreProducto" label="Nombre del producto" />
-                    <q-input outlined v-model="precioProducto" label="Precio del producto" />
-                    <q-input outlined v-model="cantidadProducto" label="Cantidad del producto" />
-                    <q-input outlined v-model="descripcionProducto" label="Descripcion del producto" />
-                    <q-btn @click="crearProducto" label="Crear Producto" />
+            <div class="container">
+                <div id="containerProductos">
+                    <h3>Ingresar Producto</h3>
+                    <div id="formularioProductos">
+                        <div id="columnasProductos">
+                            <q-input outlined v-model="nombreProducto" label="Nombre del producto" style=" width: 250px;"/>
+                            <q-input outlined type="number" v-model="precioProducto" label="Precio del producto" style="margin: 30px; width: 250px;"/>
+                            <q-input outlined v-model="impuestoAplicado" label="Impuesto a aplicar" style=" width: 250px;"/>
+                        </div>
+                        <div id="columnasProductos">
+                            <q-input outlined v-model="cantidadProducto" label="Cantidad del producto" style=" width: 250px;" />
+                            <q-input outlined v-model="descripcionProducto" label="Descripcion del producto" style="margin: 30px; width: 250px;" />
+                            <q-input outlined v-model="porcentajeImpuesto" label="Porcentaje de impuesto a aplicar" style=" width: 250px;" />
+                        </div>
+                    </div>
+                    <q-btn @click="crearProducto" label="Crear Producto" style="margin-bottom: 50px;"/>
                 </div>
-
             </div>
-
         </q-page-container>
 
     </q-layout>
@@ -40,8 +46,14 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const nombreProducto = ref('')
+const precioProducto = ref('')
+const cantidadProducto = ref('')
+const descripcionProducto = ref('')
 
-
+const crearProducto = () => {
+    // Lógica para crear producto
+}
 </script>
 
 <style>
@@ -73,6 +85,34 @@ const router = useRouter()
 #opcionesNavegacion ul {
     display: flex;
     list-style: none;
-
 }
+
+#containerProductos {
+    width: 50%;
+    text-align: center;
+    background-image: url('https://www.blogdelfotografo.com/wp-content/uploads/2021/12/fondo_blanco_gris.webp');
+    background-size: cover;
+}
+
+#formularioProductos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    
+    
+    
+}
+
+#columnasProductos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
 </style>
