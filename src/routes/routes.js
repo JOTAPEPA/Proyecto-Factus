@@ -1,8 +1,8 @@
-import login from '../components/login.vue'
+import login from '../views/login.vue'
 import home from '../components/home.vue'
 import { createWebHashHistory, createRouter } from 'vue-router';
 import createFactura from '../components/createFactura.vue';
-import createItem from '../components/createItems.vue';
+import createItem from '../views/createItems.vue';
 
 const routes = [
 
