@@ -91,11 +91,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { administrador } from '../store/useAuth.js'
-import { getDataBackend, postDataBackend } from '../services/apiClientBackend.js'
-import { getData } from '../services/apiClient.js'
+import axios from 'axios'
+
 
 const router = useRouter()
 
@@ -137,150 +136,38 @@ const columns = [
 
 const rows = ref([])
 
-const NuevoProducto = ref({
-    codeReference: '',
-    name: '',
-    price: '',
-    quantity: '',
-    unit_measure_id: '',
-    tax_rate: '',
-    is_excluded: '',
-    standard_code_id: '',
-    tribute_id: '',
-    discount_rate: ''
-})
 
-const unitMeasureOptions = ref([])
-const tributeOptions = ref([])
-
-const store = administrador()
-
-const formValido = computed(() => {
-    return NuevoProducto.value.codeReference &&
-        NuevoProducto.value.name &&
-        NuevoProducto.value.price &&
-        NuevoProducto.value.quantity &&
-        NuevoProducto.value.unit_measure_id &&
-        NuevoProducto.value.tax_rate &&
-        NuevoProducto.value.is_excluded &&
-        NuevoProducto.value.standard_code_id &&
-        NuevoProducto.value.tribute_id &&
-        NuevoProducto.value.discount_rate;
-})
-
-onMounted(async () => {
-    await getProductos();
-    await getUnitMeasureOptions();
-    await getTributeOptions();
-})
-
-async function getProductos() {
-    const token = store.getToken();
-    console.log("token recuperado de la store", token);
-    if (!token) {
-        console.log("token no encontrado");
-        return
-    }
-
-    try {
-        const response = await getDataBackend('items', token);
-        if (response && Array.isArray(response)) {
-            rows.value = response;
-        } else {
-            console.log("La respuesta no contiene los datos esperados");
-        }
-    } catch (error) {
-        console.log("Error al obtener los productos", error.response ? error.response.data : error);
-    }
-}
-
-async function getUnitMeasureOptions() {
-    try {
-        const response = await getData('/v1/measurement-units');
-        if (response.data && Array.isArray(response.data)) {
-            unitMeasureOptions.value = response.data.map(item => ({ label: item.name, value: item.id }));
-            console.log("Unidades de medida obtenidas:", unitMeasureOptions.value);
-        } else {
-            console.log("La respuesta no contiene los datos esperados");
-        }
-    } catch (error) {
-        console.log("Error al obtener las unidades de medida", error.response ? error.response.data : error);
-    }
-}
-
-async function getTributeOptions() {
-    try {
-        const response = await getData('/v1/tributes/products?name=&code=');
-        if (response.data && Array.isArray(response.data)) {
-            tributeOptions.value = response.data.map(item => ({ label: item.name, value: item.id }));
-            console.log("Tributos obtenidos:", tributeOptions.value);
-        } else {
-            console.log("La respuesta no contiene los datos esperados");
-        }
-    } catch (error) {
-        console.log("Error al obtener los tributos", error.response ? error.response.data : error);
-    }
-}
-
-const postProducto = async () => {
-    const token = store.getToken();
-    if (!token) {
-        console.log("Token no encontrado");
-        return;
-    }
-
-    try {
-        NuevoProducto.value.codeReference = (NuevoProducto.value.codeReference || '').trim();
-        NuevoProducto.value.name = (NuevoProducto.value.name || '').trim();
-        NuevoProducto.value.price = (NuevoProducto.value.price || '').trim();
-        NuevoProducto.value.quantity = (NuevoProducto.value.quantity || '').trim();
-        NuevoProducto.value.unit_measure_id = (NuevoProducto.value.unit_measure_id || '').trim();
-        NuevoProducto.value.tax_rate = (NuevoProducto.value.tax_rate || '').trim();
-        NuevoProducto.value.is_excluded = (NuevoProducto.value.is_excluded || '').trim();
-        NuevoProducto.value.standard_code_id = (NuevoProducto.value.standard_code_id || '').trim();
-        NuevoProducto.value.tribute_id = (NuevoProducto.value.tribute_id || '').trim();
-        NuevoProducto.value.discount_rate = (NuevoProducto.value.discount_rate || '').trim();
-
-        console.log(NuevoProducto.value);
-
-        const headers = {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        const response = await postDataBackend('item', NuevoProducto.value, headers); // Pasamos el token en el encabezado
-        console.log('Producto creado con éxito', response);
-
-        await getProductos();
-        dialog.value = false; // Cerrar el diálogo después de crear el producto
-
-    } catch (error) {
-        console.log('Error al crear el producto', error.response ? error.response.data : error);
-    }
-}
 </script>
 
 <style>
-#modalItems {
+#titleBar {
     display: flex;
-    flex-direction: row-reverse;
+    justify-content: center;
 }
 
-#containerModalProductos {
+#headerHome {
+    background-color: rgb(170, 196, 230);
+    color: black;
+}
+
+#desplegableFacturas {
+    background-color: rgb(170, 196, 230);
+    height: 100%;
+    border: none;
+    text-align: center;
+    border-radius: 0;
+}
+
+#desplegableFacturas option {
+    background-color: rgb(170, 196, 230);
+    text-align: center;
+    border-radius: 0px;
+    border-radius: 0;
+}
+
+#opcionesNavegacion ul {
     display: flex;
-}
+    list-style: none;
 
-#formularioProductos {
-    display: flex;
-    margin-bottom: 30px;
 }
-
-.custom-input {
-    width: 200px;
-}
-
-#columnasProductos {
-    margin-right: 10px;
-    margin-left: 10px;
-}
-</style>
+</style> 

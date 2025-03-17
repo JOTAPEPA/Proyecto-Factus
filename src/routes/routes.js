@@ -1,8 +1,8 @@
 import login from '../views/login.vue'
 import home from '../views/home.vue'
 import { createWebHashHistory, createRouter } from 'vue-router';
-import createFactura from '../views/createFactura.vue';
-import items from '../views/productos.vue';
+import facturas from '../views/facturas.vue';
+import productos from '../views/productos.vue';
 
 const routes = [
 
@@ -18,14 +18,14 @@ const routes = [
     },
 
     {
-        path:'/createFactura',
-        name:'createFactura',
-        component: createFactura
+        path:'/facturas',
+        name:'facturas',
+        component: facturas
     },
     {
-        path:'/items',
-        name:'items',
-        component: items
+        path:'/productos',
+        name:'productos',
+        component: productos
     }
 ]
 

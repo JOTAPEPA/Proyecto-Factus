@@ -18,9 +18,11 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {postData} from '../services/apiClient'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { postData } from '../services/apiClient'
+import { administrador } from '../store/useAuth'
+const store = administrador()
 
 const router = useRouter()
 const email = ref('')
@@ -38,14 +40,17 @@ const login = async () => {
         client_secret: import.meta.env.VITE_VUE_APP_CLIENT_SECRET,
     }
 
-    console.log('enviando solicitud:', data);
-
-    try{
+    try {
         const response = await postData('/oauth/token', data)
-        console.log('respuuesta recibida:', response);
+        console.log('respuesta recibida post login:', response);
+        if(response.access_token && response.refresh_token){
+            store.set_Token_RefreshToken(response.access_token, response.refresh_token)
+            
+        }
+       
         router.replace('/home')
     } catch (error) {
-        console.log('error al iniciar sesion', error);  
+        console.log('error al iniciar sesion', error);
     }
     loading.value = false
 }
@@ -57,8 +62,8 @@ const login = async () => {
     display: none;
 }
 
-.q-page-container{
-    background-image:url('https://www.blogdelfotografo.com/wp-content/uploads/2021/12/fondo_blanco_gris.webp');
+.q-page-container {
+    background-image: url('https://www.blogdelfotografo.com/wp-content/uploads/2021/12/fondo_blanco_gris.webp');
     background-size: cover;
 }
 
@@ -107,7 +112,7 @@ const login = async () => {
     margin: 10px;
     padding: 10px;
     border: none;
-    border-bottom: 1px solid rgb(103,116,133);
+    border-bottom: 1px solid rgb(103, 116, 133);
     outline: none;
     border-radius: 5px;
 }
@@ -118,7 +123,7 @@ const login = async () => {
     margin: 10px;
     padding: 10px;
     border: none;
-    background-color: rgb(0,62,133);
+    background-color: rgb(0, 62, 133);
     color: white;
     border-radius: 5px;
     cursor: pointer;
