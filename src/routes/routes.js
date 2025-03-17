@@ -1,8 +1,8 @@
 import login from '../views/login.vue'
-import home from '../components/home.vue'
+import home from '../views/home.vue'
 import { createWebHashHistory, createRouter } from 'vue-router';
-import createFactura from '../components/createFactura.vue';
-import createItem from '../views/createItems.vue';
+import createFactura from '../views/createFactura.vue';
+import items from '../views/productos.vue';
 
 const routes = [
 
@@ -23,9 +23,9 @@ const routes = [
         component: createFactura
     },
     {
-        path:'/createItems',
-        name:'createItem',
-        component: createItem
+        path:'/items',
+        name:'items',
+        component: items
     }
 ]
 
