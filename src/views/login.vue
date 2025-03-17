@@ -2,7 +2,7 @@
     <div class="container">
         <div class="containerLogin">
             <div class="titleContainerLogin">
-                <h3>Iniciar Sesion</h3>
+                <h3 style="color: rgb(0,62,133);">Iniciar Sesion</h3>
             </div>
             <div class="inputContainerLogin">
                 <input type="text" placeholder="Usuario" v-model="email" />
@@ -118,7 +118,7 @@ const login = async () => {
     margin: 10px;
     padding: 10px;
     border: none;
-    background-color: #778DA9;
+    background-color: rgb(0,62,133);
     color: white;
     border-radius: 5px;
     cursor: pointer;

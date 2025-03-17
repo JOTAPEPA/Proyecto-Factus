@@ -10,8 +10,13 @@
                 </q-toolbar-title>
             </q-toolbar>
             <q-tabs align="left">
+<<<<<<< HEAD
                 <q-route-tab to="/createFactura" label="Crear Factura" />
                 <q-route-tab to="/createItems" label="Crear Items" />
+=======
+                <q-route-tab to="/factura" label="Crear Factura" />
+                <q-route-tab to="/items" label="Crear Items" />
+>>>>>>> fb9b2741e38fd130d7ad8eec33cb8cb8fb35255e
                 <q-route-tab to="/page3" label="Page Three" />
             </q-tabs>
         </q-header>
@@ -85,6 +90,7 @@ const router = useRouter()
 </script>
 
 <style>
+<<<<<<< HEAD
 #titleBar {
     display: flex;
     justify-content: center;
@@ -116,3 +122,7 @@ const router = useRouter()
 
 }
 </style>    
+=======
+
+</style>
+>>>>>>> fb9b2741e38fd130d7ad8eec33cb8cb8fb35255e

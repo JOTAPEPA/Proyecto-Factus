@@ -43,9 +43,9 @@ const toggleLeftDrawer = () => {
  display: flex;
  justify-content: center;
 }
-#header{
- background-color: rgb(170,196,230);
- color: black;
+#headerHome{
+ background-color: rgb(0,62,133)  ;
+ color: white;
 }
 
 </style>
