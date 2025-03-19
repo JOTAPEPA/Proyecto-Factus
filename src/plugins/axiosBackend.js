@@ -1,21 +1,29 @@
-import axios from 'axios'
+import Axios from 'axios'
 
-const token = JSON.parse(localStorage.getItem('auth'))
-
-if (token) {
-    console.log("token encontrado", token);
-} else {
-    console.log("token no encontrado");
-}
-
-console.log("mitoken", token);
-
-const apiClientBackend = axios.create({
+const apiClientBackend = Axios.create({
     baseURL: 'http://localhost:3999/api/',
     headers: {
         'content-type': 'application/json',
-        Authorization: `Bearer ${token}`,
-    },
+    }
 });
+
+apiClientBackend.interceptors.request.use(
+    (config) => {
+        const store = JSON.parse(localStorage.getItem("administrador"));
+        const token = store.token;
+        console.log("token interceptado", token);
+        if(token){
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else{
+            console.log('Token no encontrado');
+
+        }
+
+        return config
+    },
+    (error) => {
+        return Promise.reject(error)
+    }
+)
 
 export default apiClientBackend;

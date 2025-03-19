@@ -32,39 +32,47 @@
                                 <div id="formularioProductos">
                                     <div id="columnasProductos">
                                         <q-input outlined v-model="NuevoProducto.codeReference"
-                                            label="Código de Referencia" class="custom-input" />
+                                            label="Código de Referencia" filled class="custom-input"
+                                            :rules="[val => val && val.length > 0 || 'El codigo de referencia es obligatorio']" />
 
                                         <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
-                                            v-model="NuevoProducto.name" label="Nombre del producto"
-                                            class="custom-input" />
+                                            v-model="NuevoProducto.name" label="Nombre del producto" filled
+                                            class="custom-input"
+                                            :rules="[val => val && val.length > 0 || 'El nombre es obligatorio']" />
 
                                         <q-input outlined type="number" v-model="NuevoProducto.price"
-                                            label="Precio del producto" class="custom-input" />
+                                            label="Precio del producto" filled class="custom-input"
+                                            :rules="[val => val && val.length > 0 || 'El Precio es obligatorio']" />
+
 
                                         <q-input outlined v-model="NuevoProducto.discount_rate" label="Descuento (%)"
-                                            class="custom-input" style="margin-top: 20px;" />
+                                            filled class="custom-input" style="margin-top: 20px;"
+                                            :rules="[val => val && val.length > 0 || 'El Descuento es obligatorio']" />
                                     </div>
                                     <div id="columnasProductos">
-                                        <q-input outlined v-model="NuevoProducto.quantity" label="Cantidad"
-                                            class="custom-input" />
+                                        <q-input outlined v-model="NuevoProducto.quantity" label="Cantidad" filled
+                                            class="custom-input"
+                                            :rules="[val => val && val.length > 0 || 'La cantidad es obligatoria']" />
 
                                         <q-select outlined v-model="NuevoProducto.unit_measure_id"
-                                            :options="unitMeasureOptions" label="Unidad de medida"
-                                            class="custom-input" />
+                                            :options="unitMeasureOptions" label="Unidad de medida" filled
+                                            class="custom-input" style="margin-top: 20px; margin-bottom: 20px;" />
 
                                         <q-input outlined v-model="NuevoProducto.tax_rate" label="Tasa de impuesto (%)"
-                                            class="custom-input" />
+                                            filled class="custom-input"
+                                            :rules="[val => val && val.length > 0 || 'La tasa de impuesto es obligatoria']" />
                                     </div>
-                                    <div id="columnasProductos">
+                                    <div id="columnasProductos">    
                                         <q-select outlined v-model="NuevoProducto.is_excluded" :options="['Sí', 'No']"
-                                            label="Excluido de impuesto" class="custom-input" />
+                                            label="Excluido de impuesto" filled class="custom-input" />
 
                                         <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
-                                            v-model="NuevoProducto.standard_code_id" label="Codigo Estandar"
-                                            class="custom-input" />
+                                            v-model="NuevoProducto.standard_code_id" label="Codigo Estandar" filled
+                                            class="custom-input"
+                                            :rules="[val => val && val.length > 0 || 'El codigo estandar es obligatorio']" />
 
                                         <q-select outlined v-model="NuevoProducto.tribute_id" :options="tributeOptions"
-                                            label="Tributo" class="custom-input" />
+                                            label="Tributo" filled class="custom-input" />
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: center;">
@@ -223,30 +231,20 @@ async function getTributeOptions() {
 }
 
 const postProducto = async () => {
-    const token = store.getToken();
-    if (!token) {
-        console.log("Token no encontrado");
-        return;
-    }
 
     try {
         NuevoProducto.value.codeReference = (NuevoProducto.value.codeReference || '').trim();
         NuevoProducto.value.name = (NuevoProducto.value.name || '').trim();
         NuevoProducto.value.price = (NuevoProducto.value.price || '').trim();
         NuevoProducto.value.quantity = (NuevoProducto.value.quantity || '').trim();
-        NuevoProducto.value.unit_measure_id = (NuevoProducto.value.unit_measure_id || '').trim();
+        NuevoProducto.value.unit_measure_id = (NuevoProducto.value.unit_measure_id || '');
         NuevoProducto.value.tax_rate = (NuevoProducto.value.tax_rate || '').trim();
-        NuevoProducto.value.is_excluded = (NuevoProducto.value.is_excluded || '').trim();
+        NuevoProducto.value.is_excluded = (NuevoProducto.value.is_excluded || '');
         NuevoProducto.value.standard_code_id = (NuevoProducto.value.standard_code_id || '').trim();
-        NuevoProducto.value.tribute_id = (NuevoProducto.value.tribute_id || '').trim();
+        NuevoProducto.value.tribute_id = (NuevoProducto.value.tribute_id || '');
         NuevoProducto.value.discount_rate = (NuevoProducto.value.discount_rate || '').trim();
 
-        console.log(NuevoProducto.value);
-
-        const headers = {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
+        console.log(NuevoProducto.value); 
 
         const response = await postDataBackend('item', NuevoProducto.value, headers); // Pasamos el token en el encabezado
         console.log('Producto creado con éxito', response);
