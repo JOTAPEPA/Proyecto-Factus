@@ -16,7 +16,7 @@
         </q-header>
 
         <q-page-container>
-            <div class="q-pa-md q-gutter-sm" id="modalItems">
+            <div class="q-pa-md q-gutter-sm" id="modalFactura">
                 <q-btn style="background-color: rgb(0,62,133); color: white;" v-for="filter in backdropFilterList"
                     :key="filter.label" :label="filter.label" no-caps @click="filter.onClick" />
 
@@ -133,13 +133,13 @@ const columns = [
         required: true,
         label: 'codigo',
         align: 'left',
-        field: row => row.name,
+        field: row => row.codeReference,
         format: val => `${val}`,
         sortable: true
     },
-    { name: 'nombre del producto', align: 'center', label: 'Nombre del producto', field: 'nombre', sortable: true },
-    { name: 'cantidad', label: 'Cantidad', field: 'cantidad', sortable: true },
-    { name: 'precio', label: 'Precio', field: 'precio' },
+    { name: 'nombre del producto', align: 'center', label: 'Nombre del producto', field: 'name', sortable: true },
+    { name: 'cantidad', label: 'Cantidad', field: 'quantity', sortable: true },
+    { name: 'precio', label: 'Precio', field: 'price' },
     { name: 'tax_rate', label: 'Tasa de impuesto (%)', field: 'tax_rate' },
 ]
 
@@ -232,6 +232,12 @@ async function getTributeOptions() {
 
 const postProducto = async () => {
 
+    const token = store.getToken();
+    if(!token){
+        console.log("token no encontrado");
+        return;
+    }
+
     try {
         NuevoProducto.value.codeReference = (NuevoProducto.value.codeReference || '').trim();
         NuevoProducto.value.name = (NuevoProducto.value.name || '').trim();
@@ -239,14 +245,19 @@ const postProducto = async () => {
         NuevoProducto.value.quantity = (NuevoProducto.value.quantity || '').trim();
         NuevoProducto.value.unit_measure_id = (NuevoProducto.value.unit_measure_id || '');
         NuevoProducto.value.tax_rate = (NuevoProducto.value.tax_rate || '').trim();
-        NuevoProducto.value.is_excluded = (NuevoProducto.value.is_excluded || '');
+        NuevoProducto.value.is_excluded = (NuevoProducto.value.is_excluded === 'Sí' ? 1 : 0);
         NuevoProducto.value.standard_code_id = (NuevoProducto.value.standard_code_id || '').trim();
         NuevoProducto.value.tribute_id = (NuevoProducto.value.tribute_id || '');
         NuevoProducto.value.discount_rate = (NuevoProducto.value.discount_rate || '').trim();
 
-        console.log(NuevoProducto.value); 
+        console.log(NuevoProducto.value);
+        
+        const headers = {
+             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
 
-        const response = await postDataBackend('item', NuevoProducto.value, headers); // Pasamos el token en el encabezado
+        const response = await postDataBackend('items', NuevoProducto.value, headers); // Pasamos el token en el encabezado
         console.log('Producto creado con éxito', response);
 
         await getProductos();
