@@ -6,32 +6,31 @@ export const administrador = defineStore("administrador", () => {
     const refreshToken = ref("");
 
     function getToken() {
-        return token.value
+        return token.value;
     }
-
-   
 
     function set_Token_RefreshToken(Token, RefreshToken) {
-        if (token && refreshToken) {
-            token.value = Token
-            refreshToken.value = RefreshToken
+        if (Token && RefreshToken) {
+            token.value = Token;
+            refreshToken.value = RefreshToken;
             console.log("token tienda", token.value);
-            console.log("refreshToken ti", refreshToken.value);
+            console.log("refreshToken tienda", refreshToken.value);
 
+            // Guardamos en localStorage para persistir el estado
             localStorage.setItem("administrador", JSON.stringify({ token: Token, refreshToken: RefreshToken }));
             console.log("token guardado", Token);
-        }
-        else {
-            console.log("no-token no-refreshToken");
+        } else {
+            console.log("No se proporcionaron token o refreshToken");
         }
     }
+
     return {
         token,
         refreshToken,
         set_Token_RefreshToken,
-        getToken 
-    }
+        getToken
+    };
 
-},{
-   persist: true,
-})
+}, {
+   persist: true, // Asegúrate de que la persistencia esté habilitada
+});

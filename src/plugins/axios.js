@@ -9,22 +9,23 @@ const apiClient = Axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-    const store = JSON.parse(localStorage.getItem("administrador"));
-        const token = store.token;
-        console.log("token interceptado", token);
-        if (token) {
-            // Si hay un token, lo agregamos a los encabezados
+        // Verifica si el localStorage tiene el objeto "administrador"
+        const store = JSON.parse(localStorage.getItem("administrador"));
+        
+        if (store && store.token) {
+            const token = store.token;
+            console.log("Token interceptado", token);
+            // Si el token existe, lo agregamos a los encabezados
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
             console.log('Token no encontrado');
         }
 
-        return config; // Asegúrate de devolver la configuración actualizada
+        return config;
     },
     (error) => {
-        return Promise.reject(error); // Si hay un error al configurar la solicitud, lo manejamos aquí
+        return Promise.reject(error);
     }
 );
-
 
 export default apiClient;
