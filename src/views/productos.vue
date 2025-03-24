@@ -16,7 +16,7 @@
         </q-header>
 
         <q-page-container>
-            <div class="q-pa-md q-gutter-sm" id="modalFactura">
+            <div class="q-pa-md q-gutter-sm" id="modalItems">
                 <q-btn style="background-color: rgb(0,62,133); color: white;" v-for="filter in backdropFilterList"
                     :key="filter.label" :label="filter.label" no-caps @click="filter.onClick" />
 
@@ -32,47 +32,48 @@
                                 <div id="formularioProductos">
                                     <div id="columnasProductos">
                                         <q-input outlined v-model="NuevoProducto.codeReference"
-                                            label="Código de Referencia" filled class="custom-input"
+                                            label="Código de Referencia" filled class="custom-input" type="String"
                                             :rules="[val => val && val.length > 0 || 'El codigo de referencia es obligatorio']" />
 
                                         <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
                                             v-model="NuevoProducto.name" label="Nombre del producto" filled
-                                            class="custom-input"
+                                            class="custom-input" type="String"
                                             :rules="[val => val && val.length > 0 || 'El nombre es obligatorio']" />
 
-                                        <q-input outlined type="number" v-model="NuevoProducto.price"
+                                        <q-input outlined type="Number" v-model="NuevoProducto.price"
                                             label="Precio del producto" filled class="custom-input"
                                             :rules="[val => val && val.length > 0 || 'El Precio es obligatorio']" />
 
 
                                         <q-input outlined v-model="NuevoProducto.discount_rate" label="Descuento (%)"
-                                            filled class="custom-input" style="margin-top: 20px;"
+                                            filled class="custom-input" type="number" style="margin-top: 20px;"
                                             :rules="[val => val && val.length > 0 || 'El Descuento es obligatorio']" />
                                     </div>
                                     <div id="columnasProductos">
                                         <q-input outlined v-model="NuevoProducto.quantity" label="Cantidad" filled
-                                            class="custom-input"
+                                            class="custom-input" type="Number"
                                             :rules="[val => val && val.length > 0 || 'La cantidad es obligatoria']" />
 
                                         <q-select outlined v-model="NuevoProducto.unit_measure_id"
                                             :options="unitMeasureOptions" label="Unidad de medida" filled
-                                            class="custom-input" style="margin-top: 20px; margin-bottom: 20px;" />
+                                            class="custom-input" type="String"
+                                            style="margin-top: 20px; margin-bottom: 20px;" />
 
                                         <q-input outlined v-model="NuevoProducto.tax_rate" label="Tasa de impuesto (%)"
-                                            filled class="custom-input"
+                                            filled class="custom-input" type="Number"
                                             :rules="[val => val && val.length > 0 || 'La tasa de impuesto es obligatoria']" />
                                     </div>
-                                    <div id="columnasProductos">    
+                                    <div id="columnasProductos">
                                         <q-select outlined v-model="NuevoProducto.is_excluded" :options="['Sí', 'No']"
                                             label="Excluido de impuesto" filled class="custom-input" />
 
                                         <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
                                             v-model="NuevoProducto.standard_code_id" label="Codigo Estandar" filled
-                                            class="custom-input"
+                                            class="custom-input" type="Number"
                                             :rules="[val => val && val.length > 0 || 'El codigo estandar es obligatorio']" />
 
                                         <q-select outlined v-model="NuevoProducto.tribute_id" :options="tributeOptions"
-                                            label="Tributo" filled class="custom-input" />
+                                            label="Tributo" filled class="custom-input" type="String" />
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: center;">
@@ -101,7 +102,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { administrador } from '../store/useAuth.js'
 import { getDataBackend, postDataBackend } from '../services/apiClientBackend.js'
 import { getData } from '../services/apiClient.js'
 
@@ -161,7 +161,7 @@ const NuevoProducto = ref({
 const unitMeasureOptions = ref([])
 const tributeOptions = ref([])
 
-const store = administrador()
+
 
 const formValido = computed(() => {
     return NuevoProducto.value.codeReference &&
@@ -183,15 +183,8 @@ onMounted(async () => {
 })
 
 async function getProductos() {
-    const token = store.getToken();
-    console.log("token recuperado de la store", token);
-    if (!token) {
-        console.log("token no encontrado");
-        return
-    }
-
     try {
-        const response = await getDataBackend('items', token);
+        const response = await getDataBackend('items',);
         if (response && Array.isArray(response)) {
             rows.value = response;
         } else {
@@ -231,42 +224,29 @@ async function getTributeOptions() {
 }
 
 const postProducto = async () => {
-
-    const token = store.getToken();
-    if(!token){
-        console.log("token no encontrado");
-        return;
-    }
-
     try {
         NuevoProducto.value.codeReference = (NuevoProducto.value.codeReference || '').trim();
         NuevoProducto.value.name = (NuevoProducto.value.name || '').trim();
-        NuevoProducto.value.price = (NuevoProducto.value.price || '').trim();
-        NuevoProducto.value.quantity = (NuevoProducto.value.quantity || '').trim();
-        NuevoProducto.value.unit_measure_id = (NuevoProducto.value.unit_measure_id || '');
-        NuevoProducto.value.tax_rate = (NuevoProducto.value.tax_rate || '').trim();
-        NuevoProducto.value.is_excluded = (NuevoProducto.value.is_excluded === 'Sí' ? 1 : 0);
-        NuevoProducto.value.standard_code_id = (NuevoProducto.value.standard_code_id || '').trim();
-        NuevoProducto.value.tribute_id = (NuevoProducto.value.tribute_id || '');
-        NuevoProducto.value.discount_rate = (NuevoProducto.value.discount_rate || '').trim();
+        NuevoProducto.value.price = parseFloat(NuevoProducto.value.price) || 0;
+        NuevoProducto.value.quantity = parseInt(NuevoProducto.value.quantity) || 0;
+        NuevoProducto.value.unit_measure_id = String(NuevoProducto.value.unit_measure_id || '').trim();
+        NuevoProducto.value.tax_rate = parseFloat(NuevoProducto.value.tax_rate) || 0;
+        NuevoProducto.value.is_excluded = NuevoProducto.value.is_excluded === 'Sí';
+        NuevoProducto.value.standard_code_id = parseInt(NuevoProducto.value.standard_code_id) || 0;
+        NuevoProducto.value.tribute_id = parseInt(NuevoProducto.value.tribute_id) || 0;
+        NuevoProducto.value.discount_rate = parseFloat(NuevoProducto.value.discount_rate) || 0;
 
         console.log(NuevoProducto.value);
-        
-        const headers = {
-             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
 
-        const response = await postDataBackend('items', NuevoProducto.value, headers); // Pasamos el token en el encabezado
+        const response = await postDataBackend('items', NuevoProducto.value); // Pasamos el token en el encabezado
         console.log('Producto creado con éxito', response);
-
         await getProductos();
         dialog.value = false; // Cerrar el diálogo después de crear el producto
 
     } catch (error) {
-        console.log('Error al crear el producto', error.response ? error.response.data : error);
+        console.error('Error al crear el producto', error.response ? error.response.data : error);
     }
-}
+};
 </script>
 
 <style>

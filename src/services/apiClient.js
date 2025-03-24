@@ -1,11 +1,5 @@
 import apiClient from "../plugins/axios";
-// Crear una instancia de axios
 
-
-// Interceptor para agregar el token de autenticación a todas las solicitudes
-
-
-// Función para hacer una solicitud GET
 export async function getData(url) {
     try {
         const response = await apiClient.get(url);
@@ -16,7 +10,7 @@ export async function getData(url) {
     }
 }
 
-// Función para hacer una solicitud POST
+
 export async function postData(url, data) {
     try {
         const response = await apiClient.post(url, data);

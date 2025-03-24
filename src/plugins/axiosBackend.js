@@ -10,15 +10,13 @@ const apiClientBackend = Axios.create({
 apiClientBackend.interceptors.request.use(
     (config) => {
         const store = JSON.parse(localStorage.getItem("administrador"));
-        const token = store.token;
-        console.log("token interceptado", token);
-        if(token){
+        if (store && store.token) {
+            const token = store.token;
+            console.log("token interceptado", token);
             config.headers['Authorization'] = `Bearer ${token}`;
-        } else{
+        } else {
             console.log('Token no encontrado');
-
         }
-
         return config
     },
     (error) => {

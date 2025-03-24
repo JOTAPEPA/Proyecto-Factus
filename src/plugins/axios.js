@@ -9,7 +9,6 @@ const apiClient = Axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-        // Verifica si el localStorage tiene el objeto "administrador"
         const store = JSON.parse(localStorage.getItem("administrador"));
         
         if (store && store.token) {

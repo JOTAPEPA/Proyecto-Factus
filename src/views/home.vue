@@ -10,9 +10,9 @@
                 </q-toolbar-title>
             </q-toolbar>
             <q-tabs align="left">
-                <q-route-tab to="/factura" label="Crear Factura" />
+              
                 <q-route-tab to="/productos" label="Crear Items" />
-                <q-route-tab to="/page3" label="Page Three" />
+             
             </q-tabs>
         </q-header>
 

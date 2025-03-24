@@ -14,64 +14,19 @@
                 <q-route-tab to="/productos" label="Productos" />
             </q-tabs>
         </q-header>
-
         <q-page-container>
-            <div class="q-pa-md q-gutter-sm" id="modalItems">
-                <q-btn style="background-color: rgb(0,62,133); color: white;" v-for="filter in backdropFilterList"
-                    :key="filter.label" :label="filter.label" no-caps @click="filter.onClick" />
+            <div class="q-pa-md q-gutter-sm">
+                <q-btn v-for="filter in backdropFilterList" :key="filter.label" color="primary" :label="filter.label"
+                    no-caps @click="filter.onClick" />
 
                 <q-dialog v-model="dialog" :backdrop-filter="backdropFilter">
-                    <q-card style="max-width: 100%;">
+                    <q-card>
                         <q-card-section class="row items-center q-pb-none text-h6">
+                            Dialog
                         </q-card-section>
 
                         <q-card-section>
-                            <div class="containerModalProductos">
-                                <h3 style="text-align: center; padding: 20px; color:  rgb(0,62,133) ;">Ingresar Producto
-                                </h3>
-                                <div id="formularioProductos">
-                                    <div id="columnasProductos">
-                                        <q-input outlined v-model="NuevoProducto.codeReference"
-                                            label="Código de Referencia" class="custom-input" />
-
-                                        <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
-                                            v-model="NuevoProducto.name" label="Nombre del producto"
-                                            class="custom-input" />
-
-                                        <q-input outlined type="number" v-model="NuevoProducto.price"
-                                            label="Precio del producto" class="custom-input" />
-
-                                        <q-input outlined v-model="NuevoProducto.discount_rate" label="Descuento (%)"
-                                            class="custom-input" style="margin-top: 20px;" />
-                                    </div>
-                                    <div id="columnasProductos">
-                                        <q-input outlined v-model="NuevoProducto.quantity" label="Cantidad"
-                                            class="custom-input" />
-
-                                        <q-select outlined v-model="NuevoProducto.unit_measure_id"
-                                            :options="unitMeasureOptions" label="Unidad de medida"
-                                            class="custom-input" />
-
-                                        <q-input outlined v-model="NuevoProducto.tax_rate" label="Tasa de impuesto (%)"
-                                            class="custom-input" />
-                                    </div>
-                                    <div id="columnasProductos">
-                                        <q-select outlined v-model="NuevoProducto.is_excluded" :options="['Sí', 'No']"
-                                            label="Excluido de impuesto" class="custom-input" />
-
-                                        <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
-                                            v-model="NuevoProducto.standard_code_id" label="Codigo Estandar"
-                                            class="custom-input" />
-
-                                        <q-select outlined v-model="NuevoProducto.tribute_id" :options="tributeOptions"
-                                            label="Tributo" class="custom-input" />
-                                    </div>
-                                </div>
-                                <div style="display: flex; justify-content: center;">
-                                    <q-btn :disable="!formValido" @click="postProducto" label="Crear Producto"
-                                        style="width: 180px; height: 50px; background-color: rgb(0,62,133); color: white" />
-                                </div>
-                            </div>
+                            This dialog has a backdrop filter of {{ backdropFilter }}.
                         </q-card-section>
 
                         <q-card-actions align="right">
@@ -80,31 +35,25 @@
                     </q-card>
                 </q-dialog>
             </div>
-
             <div class="q-pa-md">
                 <q-table flat bordered :rows="rows" :columns="columns" row-key="name" />
             </div>
-
         </q-page-container>
-
     </q-layout>
 </template>
-
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
 
-
-const router = useRouter()
-
+// Lista de filtros para el fondo (backdrop-filter)
 const list = [
-    'Ingresar Producto',
+    'Agregar factura',
+
 ]
 
-const dialog = ref(false)
-const backdropFilter = ref(null)
+const dialog = ref(false) // Controla la visibilidad del diálogo
+const backdropFilter = ref(null) // El filtro de fondo seleccionado
 
+// Genera la lista de filtros de fondo con una función de clic para aplicar el filtro
 const backdropFilterList = list.map(filter => ({
     label: filter,
     onClick: () => {
@@ -124,18 +73,17 @@ const columns = [
         required: true,
         label: 'codigo',
         align: 'left',
-        field: row => row.name,
+        field: row => row.codeReference,
         format: val => `${val}`,
         sortable: true
     },
-    { name: 'nombre del producto', align: 'center', label: 'Nombre del producto', field: 'nombre', sortable: true },
-    { name: 'cantidad', label: 'Cantidad', field: 'cantidad', sortable: true },
-    { name: 'precio', label: 'Precio', field: 'precio' },
+    { name: 'nombre del producto', align: 'center', label: 'Nombre del producto', field: 'name', sortable: true },
+    { name: 'cantidad', label: 'Cantidad', field: 'quantity', sortable: true },
+    { name: 'precio', label: 'Precio', field: 'price' },
     { name: 'tax_rate', label: 'Tasa de impuesto (%)', field: 'tax_rate' },
 ]
 
 const rows = ref([])
-
 
 </script>
 
@@ -148,6 +96,11 @@ const rows = ref([])
 #headerHome {
     background-color: rgb(170, 196, 230);
     color: black;
+}
+
+#modalFacturas {
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 #desplegableFacturas {
@@ -170,4 +123,4 @@ const rows = ref([])
     list-style: none;
 
 }
-</style> 
+</style>
