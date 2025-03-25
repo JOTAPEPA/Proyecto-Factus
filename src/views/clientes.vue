@@ -15,25 +15,18 @@
                 <q-route-tab to="/clientes" label="Clientes" />
             </q-tabs>
         </q-header>
+
         <q-page-container>
-            <div class="q-pa-md q-gutter-sm">
-                <q-btn label="Maximized" color="primary" @click="dialog = true" />
+            <div class="q-pa-md q-gutter-sm" id="modalItems">
+                <q-btn style="background-color: rgb(0,62,133); color: white;" v-for="filter in backdropFilterList"
+                    :key="filter.label" :label="filter.label" no-caps @click="filter.onClick" />
 
-                <q-dialog v-model="dialog" persistent :maximized="maximizedToggle" transition-show="slide-up"
-                    transition-hide="slide-down">
-                    <q-card class="bg-primary text-white">
-                        <q-bar>
-                            <q-space />
-                            <q-btn dense flat icon="close" v-close-popup>
-                                <q-tooltip class="bg-white text-primary">Close</q-tooltip>
-                            </q-btn>
-                        </q-bar>
-
-                        <q-card-section>
-                            <div class="text-h6">Crear Factura</div>
+                <q-dialog v-model="dialog" :backdrop-filter="backdropFilter">
+                    <q-card style="max-width: 100%;">
+                        <q-card-section class="row items-center q-pb-none text-h6">
                         </q-card-section>
 
-                        <q-card-section class="q-pt-none">
+                        <q-card-section>
                             <h5 style="text-align: center;">Cliente</h5>
                             <div class="cliente">
                                 <div>
@@ -90,41 +83,48 @@
                                         :options="municipalityOptions" label="Municipio" filled class="custom-input"
                                         type="String"
                                         :rules="[val => val && val.length > 0 || 'El municipio es obligatorio']" />
-
                                 </div>
 
                             </div>
-
-                            <h5 style="text-align: center;">Productos</h5>
-                            <div class="Productos">
-
-                            </div>
                         </q-card-section>
+
                         <q-card-actions align="right">
-                            <q-btn flat label="Crear" color="primary" @click="postFactura" />
+                            <q-btn flat label="Close" color="primary" v-close-popup />
+                            <q-btn flat label="Crear" color="primary" @click="postFactura" :disable="!formValido" />
                         </q-card-actions>
                     </q-card>
                 </q-dialog>
             </div>
 
             <div class="q-pa-md">
-                <q-table style="height: 400px" flat bordered title="Facturas" :rows="rows" :columns="columns"
-                    row-key="index" virtual-scroll v-model:pagination="pagination" :rows-per-page-options="[0]" />
+                <q-table flat bordered :rows="rows" :columns="columns" row-key="name" />
             </div>
 
         </q-page-container>
 
     </q-layout>
-
 </template>
+
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { getData } from '../services/apiClient.js'
 import { getDataBackend, postDataBackend } from '../services/apiClientBackend.js'
 
 const dialog = ref(false)
-const maximizedToggle = ref(true)
+const backdropFilter = ref(null)
 const municipalityOptions = ref([])
+
+const list = [
+    'Ingresar Producto',
+]
+
+const backdropFilterList = list.map(filter => ({
+    label: filter,
+    onClick: () => {
+        backdropFilter.value = filter
+        dialog.value = true
+    }
+}))
 
 const columns = [
     {
@@ -223,6 +223,7 @@ async function getMunicipalityOptions() {
     }
 }
 
+
 </script>
 
 <style>
@@ -259,7 +260,6 @@ async function getMunicipalityOptions() {
 #opcionesNavegacion ul {
     display: flex;
     list-style: none;
-
 }
 
 .cliente {

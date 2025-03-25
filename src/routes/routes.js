@@ -3,6 +3,7 @@ import home from '../views/home.vue'
 import { createWebHashHistory, createRouter } from 'vue-router';
 import facturas from '../views/facturas.vue';
 import productos from '../views/productos.vue';
+import clientes from '../views/clientes.vue';
 
 const routes = [
 
@@ -26,6 +27,13 @@ const routes = [
         path:'/productos',
         name:'productos',
         component: productos
+    },
+
+    {
+        path: '/clientes',
+        name: 'clientes',
+        component: clientes
+
     }
 ]
 

@@ -12,6 +12,7 @@
             <q-tabs align="center">
                 <q-route-tab to="/facturas" label="Facturas" />
                 <q-route-tab to="/productos" label="Productos" />
+                <q-route-tab to="/clientes" label="Clientes" />
             </q-tabs>
         </q-header>
 
