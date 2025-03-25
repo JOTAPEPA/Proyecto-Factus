@@ -183,15 +183,9 @@ onMounted(async () => {
 })
 
 async function getProductos() {
-    const token = store.getToken();
-    console.log("token recuperado de la store", token);
-    if (!token) {
-        console.log("token no encontrado");
-        return
-    }
 
     try {
-        const response = await getDataBackend('items', token);
+        const response = await getDataBackend('items');
         if (response && Array.isArray(response)) {
             rows.value = response;
         } else {
