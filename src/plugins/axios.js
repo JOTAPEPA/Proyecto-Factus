@@ -10,8 +10,8 @@ const apiClient = Axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-        const AuthStore = administrador();
-        const token = AuthStore.token;
+        const authStore = administrador();
+        const token = authStore.token;
 
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;

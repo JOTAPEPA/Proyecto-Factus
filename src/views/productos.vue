@@ -193,17 +193,14 @@ onMounted(async () => {
 })
 
 async function getProductos() {
-
     try {
-        const response = await getDataBackend('items',);
-        if (response && Array.isArray(response)) {
-            rows.value = response;
-        } else {
-            console.log("La respuesta no contiene los datos esperados");
-        }
+        const response = await getDataBackend('items');
+        rows.value = response;
+        console.log(response);
     } catch (error) {
-        console.log("Error al obtener los productos", error.response ? error.response.data : error);
+        console.error('Error al obtener los datos:', error);
     }
+
 }
 
 async function getUnitMeasureOptions() {
@@ -253,10 +250,10 @@ const postProducto = async () => {
         const response = await postDataBackend('items', newProduct);
         console.log(response);
         dialog.value = false;
-        await getProductos(); 
-    } catch (error){
-    console.error('Error al guardar producto:', error);
-  }
+        await getProductos();
+    } catch (error) {
+        console.error('Error al guardar producto:', error);
+    }
 };  
 </script>
 
