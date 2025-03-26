@@ -33,52 +33,68 @@
                                 <div id="formularioProductos">
                                     <div id="columnasProductos">
                                         <q-input outlined v-model="NuevoProducto.codeReference"
-                                            label="Código de Referencia" filled class="custom-input" type="String"
-                                            :rules="[val => val && val.length > 0 || 'El codigo de referencia es obligatorio']" />
+                                            label="Código de Referencia" filled class="custom-input"
+                                            :rules="[val => !!val || 'Este campo es requerido']" />
 
                                         <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
                                             v-model="NuevoProducto.name" label="Nombre del producto" filled
-                                            class="custom-input" type="String"
-                                            :rules="[val => val && val.length > 0 || 'El nombre es obligatorio']" />
+                                            class="custom-input" :rules="[val => !!val || 'Este campo es requerido']" />
 
                                         <q-input outlined type="Number" v-model="NuevoProducto.price"
                                             label="Precio del producto" filled class="custom-input"
-                                            :rules="[val => val && val.length > 0 || 'El Precio es obligatorio']" />
+                                            :rules="[val => !!val || 'Este campo es requerido']" />
 
+                                        <q-toggle v-model="NuevoProducto.is_excluded" label="Está Excluido"
+                                            color="primary" />
 
-                                        <q-input outlined v-model="NuevoProducto.discount_rate" label="Descuento (%)"
-                                            filled class="custom-input" type="number" style="margin-top: 20px;"
-                                            :rules="[val => val && val.length > 0 || 'El Descuento es obligatorio']" />
                                     </div>
                                     <div id="columnasProductos">
-                                        <q-input outlined v-model="NuevoProducto.quantity" label="Cantidad" filled
-                                            class="custom-input" type="Number"
-                                            :rules="[val => val && val.length > 0 || 'La cantidad es obligatoria']" />
 
                                         <q-select outlined v-model="NuevoProducto.unit_measure_id"
-                                            :options="unitMeasureOptions" label="Unidad de medida" filled
-                                            class="custom-input" type="String"
+                                            :options="unitMeasureOptions" label="Unidad de medida" emit-value
+                                            map-options filled class="custom-input"
+                                            :rules="[val => !!val || 'Este campo es requerido']"
                                             style="margin-top: 20px; margin-bottom: 20px;" />
 
                                         <q-input outlined v-model="NuevoProducto.tax_rate" label="Tasa de impuesto (%)"
-                                            filled class="custom-input" type="Number"
-                                            :rules="[val => val && val.length > 0 || 'La tasa de impuesto es obligatoria']" />
+                                            filled class="custom-input" type="Number" suffix="%"
+                                            :rules="[val => !!val || 'Este campo es requerido']" />
                                     </div>
                                     <div id="columnasProductos">
-                                        <q-select outlined v-model="NuevoProducto.is_excluded" :options="['Sí', 'No']"
-                                            label="Excluido de impuesto" filled class="custom-input" />
 
-                                        <q-input style="margin-top: 20px; margin-bottom: 20px;" outlined
-                                            v-model="NuevoProducto.standard_code_id" label="Codigo Estandar" filled
-                                            class="custom-input" type="Number"
-                                            :rules="[val => val && val.length > 0 || 'El codigo estandar es obligatorio']" />
+                                        <q-select v-model="NuevoProducto.standard_code_id"
+                                            :options="standardCodeOptions" option-label="name" option-value="name"
+                                            emit-value map-options outlined filled label="Código Estándar"
+                                            :rules="[val => !!val || 'Este campo es requerido']" />
 
                                         <q-select outlined v-model="NuevoProducto.tribute_id" :options="tributeOptions"
-                                            label="Tributo" filled class="custom-input" type="String" />
+                                            map-options emit-value label="Tributo" filled class="custom-input"
+                                            :rules="[val => !!val || 'Este campo es requerido']" />
                                     </div>
+
+
+                                </div>
+                                <div>
+                                    <q-list bordered class="q-mb-md">
+                                        <q-item v-for="(tax, index) in NuevoProducto.withholding_taxes" :key="index">
+                                            <q-item-section>
+                                                <q-input v-model="tax.code" label="Código de Retención" filled
+                                                    outlined />
+                                            </q-item-section>
+                                            <q-item-section>
+                                                <q-input v-model="tax.withholding_tax_rate"
+                                                    label="Tasa de Retención (%)" filled outlined type="number"
+                                                    suffix="%" />
+                                            </q-item-section>
+                                            <q-item-section side>
+                                                <q-btn icon="delete" color="red" dense flat @click="removeTax(index)" />
+                                            </q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                    <q-btn icon="add" color="primary" label="Añadir Retención" @click="addTax" flat />
                                 </div>
                                 <div style="display: flex; justify-content: center;">
-                                    <q-btn :disable="!formValido" @click="postProducto" label="Crear Producto"
+                                    <q-btn @click="postProducto" label="Crear Producto"
                                         style="width: 180px; height: 50px; background-color: rgb(0,62,133); color: white" />
                                 </div>
                             </div>
@@ -125,11 +141,6 @@ const backdropFilterList = list.map(filter => ({
 
 const columns = [
     {
-        name: 'numero',
-        label: 'Numero',
-        field: 'numero'
-    },
-    {
         name: 'codigo',
         required: true,
         label: 'codigo',
@@ -149,33 +160,31 @@ const rows = ref([])
 const NuevoProducto = ref({
     codeReference: '',
     name: '',
-    price: '',
-    quantity: '',
-    unit_measure_id: '',
-    tax_rate: '',
-    is_excluded: '',
-    standard_code_id: '',
-    tribute_id: '',
-    discount_rate: ''
+    price: 0,
+    unit_measure_id: null,
+    tax_rate: 19,
+    is_excluded: false,
+    standard_code_id: null,
+    tribute_id: null,
+    withholding_taxes: []
 })
 
 const unitMeasureOptions = ref([])
 const tributeOptions = ref([])
+const standardCodeOptions = ref([
+    { id: 1, name: 'Estándar de adopción del contribuyente' },
+    { id: 2, name: 'UNSPSC' },
+    { id: 3, name: 'Partida Arancelaria' },
+    { id: 4, name: 'GTIN' }
+])
 
+const addTax = () => {
+    NuevoProducto.value.withholding_taxes.push({ code: '', withholding_tax_rate: null });
+};
 
-
-const formValido = computed(() => {
-    return NuevoProducto.value.codeReference &&
-        NuevoProducto.value.name &&
-        NuevoProducto.value.price &&
-        NuevoProducto.value.quantity &&
-        NuevoProducto.value.unit_measure_id &&
-        NuevoProducto.value.tax_rate &&
-        NuevoProducto.value.is_excluded &&
-        NuevoProducto.value.standard_code_id &&
-        NuevoProducto.value.tribute_id &&
-        NuevoProducto.value.discount_rate;
-})
+const removeTax = (index) => {
+    NuevoProducto.value.withholding_taxes.splice(index, 1);
+};
 
 onMounted(async () => {
     await getProductos();
@@ -215,7 +224,7 @@ async function getTributeOptions() {
     try {
         const response = await getData('/v1/tributes/products?name=&code=');
         if (response.data && Array.isArray(response.data)) {
-            tributeOptions.value = response.data.map(item => ({ label: item.name, value: item.id }));
+            tributeOptions.value = response.data.map(item => ({ label: `${item.code} - ${item.name}`, value: item.name }));
             console.log("Tributos obtenidos:", tributeOptions.value);
         } else {
             console.log("La respuesta no contiene los datos esperados");
@@ -226,29 +235,29 @@ async function getTributeOptions() {
 }
 
 const postProducto = async () => {
-    try {
-        NuevoProducto.value.codeReference = (NuevoProducto.value.codeReference || '').trim();
-        NuevoProducto.value.name = (NuevoProducto.value.name || '').trim();
-        NuevoProducto.value.price = parseFloat(NuevoProducto.value.price) || 0;
-        NuevoProducto.value.quantity = parseInt(NuevoProducto.value.quantity) || 0;
-        NuevoProducto.value.unit_measure_id = String(NuevoProducto.value.unit_measure_id || '').trim();
-        NuevoProducto.value.tax_rate = parseFloat(NuevoProducto.value.tax_rate) || 0;
-        NuevoProducto.value.is_excluded = NuevoProducto.value.is_excluded === 'Sí';
-        NuevoProducto.value.standard_code_id = parseInt(NuevoProducto.value.standard_code_id) || 0;
-        NuevoProducto.value.tribute_id = parseInt(NuevoProducto.value.tribute_id) || 0;
-        NuevoProducto.value.discount_rate = parseFloat(NuevoProducto.value.discount_rate) || 0;
-
-        console.log(NuevoProducto.value);
-
-        const response = await postDataBackend('items', NuevoProducto.value); // Pasamos el token en el encabezado
-        console.log('Producto creado con éxito', response);
-        await getProductos();
-        dialog.value = false; // Cerrar el diálogo después de crear el producto
-
-    } catch (error) {
-        console.error('Error al crear el producto', error.response ? error.response.data : error);
+    const newProduct = {
+        ...NuevoProducto.value,
+        price: Number(NuevoProducto.value.price),
+        tax_rate: Number(NuevoProducto.value.tax_rate),
+        unit_measure_id: String(NuevoProducto.value.unit_measure_id),
+        standard_code_id: String(NuevoProducto.value.standard_code_id),
+        tribute_id: String(NuevoProducto.value.tribute_id),
+        withholding_taxes: NuevoProducto.value.withholding_taxes.map(item => ({
+            code: item.code,
+            withholding_tax_rate: Number(item.withholding_tax_rate)
+        }))
     }
-};
+
+    try {
+        console.log(newProduct);
+        const response = await postDataBackend('items', newProduct);
+        console.log(response);
+        dialog.value = false;
+        await getProductos(); 
+    } catch (error){
+    console.error('Error al guardar producto:', error);
+  }
+};  
 </script>
 
 <style>

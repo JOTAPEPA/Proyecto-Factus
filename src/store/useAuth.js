@@ -4,17 +4,13 @@ import { ref } from "vue";
 export const administrador = defineStore("administrador", () => {
     const token = ref("");
     const refreshToken = ref("");
+    const userName = ref("");
 
-    function getToken() {
-        return token.value;
-    }
 
     function set_Token_RefreshToken(Token, RefreshToken) {
         if (Token && RefreshToken) {
             token.value = Token;
             refreshToken.value = RefreshToken;
-            console.log("token tienda", token.value);
-            console.log("refreshToken tienda", refreshToken.value);
 
             // Guardamos en localStorage para persistir el estado
             localStorage.setItem("administrador", JSON.stringify({ token: Token, refreshToken: RefreshToken }));
@@ -24,12 +20,26 @@ export const administrador = defineStore("administrador", () => {
         }
     }
 
+    function setUserName(email){
+        userName.value = email;
+      }
+
+      function logout() {
+        token.value = "";
+        refreshToken.value = "";
+        userName.value = "";
+  
+        localStorage.removeItem("administrador");
+      }
+
     return {
         token,
         refreshToken,
+        userName,
         set_Token_RefreshToken,
-        getToken
-    };
+        logout,
+        setUserName
+    };  
 
 }, {
    persist: true, // Asegúrate de que la persistencia esté habilitada
