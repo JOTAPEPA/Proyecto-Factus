@@ -17,20 +17,17 @@
         </q-header>
         <q-page-container>
             <div class="q-pa-md q-gutter-sm">
-                <q-btn label="Maximized" color="primary" @click="dialog = true" />
+                <q-btn v-for="filter in backdropFilterList" :key="filter.label" color="primary" :label="filter.label"
+                    no-caps @click="filter.onClick" />
 
-                <q-dialog v-model="dialog" persistent :maximized="maximizedToggle" transition-show="slide-up"
-                    transition-hide="slide-down">
-                    <q-card class="bg-primary text-white">
-                        <q-bar>
-                            <q-space />
-                            <q-btn dense flat icon="close" v-close-popup>
-                                <q-tooltip class="bg-white text-primary">Close</q-tooltip>
-                            </q-btn>
-                        </q-bar>
+                <q-dialog v-model="dialog" :backdrop-filter="backdropFilter">
+                    <q-card>
+                        <q-card-section class="row items-center q-pb-none text-h6">
+                            Dialog
+                        </q-card-section>
 
                         <q-card-section>
-                            <div class="text-h6">Crear Factura</div>
+                            This dialog has a backdrop filter of {{ backdropFilter }}.
                         </q-card-section>
 
                         <q-card-section class="q-pt-none">
@@ -103,19 +100,19 @@
                         <q-card-actions align="right">
                             <q-btn flat label="Crear" color="primary" @click="postFactura" />
                         </q-card-actions>
+                        <q-card-actions align="right">
+                            <q-btn flat label="Close" color="primary" v-close-popup />
+                        </q-card-actions>
                     </q-card>
                 </q-dialog>
             </div>
-
             <div class="q-pa-md">
                 <q-table style="height: 400px" flat bordered title="Facturas" :rows="rows" :columns="columns"
                     row-key="index" virtual-scroll v-model:pagination="pagination" :rows-per-page-options="[0]" />
             </div>
 
         </q-page-container>
-
     </q-layout>
-
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue'
@@ -260,10 +257,5 @@ async function getMunicipalityOptions() {
     display: flex;
     list-style: none;
 
-}
-
-.cliente {
-    display: flex;
-    justify-content: center;
 }
 </style>
