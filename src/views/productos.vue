@@ -98,6 +98,7 @@
                                         style="width: 180px; height: 50px; background-color: rgb(0,62,133); color: white" />
                                 </div>
                             </div>
+
                         </q-card-section>
 
                         <q-card-actions align="right">
@@ -117,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getDataBackend, postDataBackend } from '../services/apiClientBackend.js'
 import { getData } from '../services/apiClient.js'
@@ -150,7 +151,6 @@ const columns = [
         sortable: true
     },
     { name: 'nombre del producto', align: 'center', label: 'Nombre del producto', field: 'name', sortable: true },
-    { name: 'cantidad', label: 'Cantidad', field: 'quantity', sortable: true },
     { name: 'precio', label: 'Precio', field: 'price' },
     { name: 'tax_rate', label: 'Tasa de impuesto (%)', field: 'tax_rate' },
 ]
@@ -254,7 +254,10 @@ const postProducto = async () => {
     } catch (error) {
         console.error('Error al guardar producto:', error);
     }
-};  
+};
+
+
+
 </script>
 
 <style>

@@ -28,61 +28,63 @@
 
                         <q-card-section>
                             <h5 style="text-align: center;">Cliente</h5>
+                            <div>
+                                <q-select outlined v-model="NuevoCliente.legalOrganizationId"
+                                    :options="tiposDeOrganizacion" option-value="id" option-label="name"
+                                    label="Tipo de persona" emit-value map-options filled class="custom-input"
+                                    :rules="[val => !!val || 'Este campo es requerido']"
+                                    @update:model-value="cambioDeOrganizacion" />
+                            </div>
+
                             <div class="cliente">
                                 <div>
-                                    <q-input outlined v-model="NuevaFactura.legalOrganizationId" label="Tipo de cliente"
-                                        filled class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El tipo de cliente es obligatorio']" />
 
-                                    <q-input outlined v-model="NuevaFactura.identificationDocumentId"
-                                        label="Tipo de identificacion" filled class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El tipo de identificacion es obligatorio']" />
+                                    <q-input v-if="NuevoCliente.legalOrganizationId === 1"
+                                        v-model="NuevoCliente.company" label="Razón Social" filled
+                                        class="custom-input" />
 
-                                    <q-input outlined v-model="NuevaFactura.identification"
-                                        label="numero de identificacion" filled class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El numero de identificacion es obligatorio']" />
+                                    <q-input v-if="NuevoCliente.legalOrganizationId === 1"
+                                        v-model="NuevoCliente.tradeName" label="Nombre comercial" filled
+                                        class="custom-input" />
 
-                                    <q-input outlined v-model="NuevaFactura.dv" label="dv" filled class="custom-input"
-                                        type="String"
-                                        :rules="[val => val && val.length > 0 || 'El dv es obligatorio']" />
+                                    <q-input v-if="NuevoCliente.legalOrganizationId === 2" v-model="NuevoCliente.names"
+                                        label="Nombre completo" filled class="custom-input" />
+
+                                    <q-select outlined v-model="NuevoCliente.identificationDocumentId"
+                                        :options="tiposDeDocumento" label="Tipo de identificacion" filled emit-value
+                                        map-options class="custom-input"
+                                        :rules="[val => !!val || 'Este campo es requerido']" />
+
+                                    <q-input outlined v-model="NuevoCliente.identification" label="identificacion"
+                                        filled class="custom-input"
+                                        :rules="[val => !!val || 'Este campo es requerido']" />
 
                                 </div>
 
                                 <div>
-                                    <q-input outlined v-model="NuevaFactura.names" label="Nombre" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El nombre es obligatorio']" />
+                                    <q-select outlined v-model="NuevoCliente.tributeId" :options="tributeOptions"
+                                        label="Tributo" filled class="custom-input" emit-value map-options
+                                        :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.addres" label="Direccion" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'La direccion es obligatoria']" />
+                                    <q-input outlined v-model="NuevoCliente.addres" label="Direccion" filled
+                                        class="custom-input" :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.email" label="Correo electronico" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El correo electronico es obligatorio']" />
+                                    <q-input outlined v-model="NuevoCliente.email" label="Correo electronico" filled
+                                        class="custom-input" :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.phone" label="Telefono" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El telefono es obligatorio']" />
+
                                 </div>
 
                                 <div>
-                                    <q-input outlined v-model="NuevaFactura.company" label="Compañia" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'La compañia es obligatoria']" />
 
-                                    <q-input outlined v-model="NuevaFactura.tradeName" label="Trade Name" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El trade name es obligatorio']" />
+                                    <q-input outlined v-model="NuevoCliente.phone" label="Telefono" filled
+                                        class="custom-input" type="tel"
+                                        :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.tributeId" label="Tributo" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El tributo es obligatorio']" />
-
-                                    <q-select outlined v-model="NuevaFactura.municipalityId"
+                                    <q-select outlined v-model="NuevoCliente.municipalityId"
                                         :options="municipalityOptions" label="Municipio" filled class="custom-input"
-                                        type="String"
-                                        :rules="[val => val && val.length > 0 || 'El municipio es obligatorio']" />
+                                        emit-value map-options type="String"
+                                        :rules="[val => val !== null || 'El municipio es obligatorio']" />
                                 </div>
 
                             </div>
@@ -90,11 +92,13 @@
 
                         <q-card-actions align="right">
                             <q-btn flat label="Close" color="primary" v-close-popup />
-                            <q-btn flat label="Crear" color="primary" @click="postFactura" :disable="!formValido" />
+                            <q-btn flat label="Crear" color="primary" @click="postCliente" />
                         </q-card-actions>
                     </q-card>
                 </q-dialog>
             </div>
+
+
 
             <div class="q-pa-md">
                 <q-table flat bordered :rows="rows" :columns="columns" row-key="name" />
@@ -106,13 +110,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getData } from '../services/apiClient.js'
 import { getDataBackend, postDataBackend } from '../services/apiClientBackend.js'
 
 const dialog = ref(false)
 const backdropFilter = ref(null)
 const municipalityOptions = ref([])
+
+
 
 const list = [
     'Ingresar Producto',
@@ -128,30 +134,90 @@ const backdropFilterList = list.map(filter => ({
 
 const columns = [
     {
-        name: 'numero',
-        label: 'Numero',
-        field: 'numero'
-    },
-    {
-        name: 'codigo',
+        name: 'names',
         required: true,
-        label: 'codigo',
+        label: 'Nombre',
         align: 'left',
-        field: row => row.codeReference,
+        field: row => row.names,
         format: val => `${val}`,
         sortable: true
     },
-    { name: 'nombre del producto', align: 'center', label: 'Nombre del producto', field: 'name', sortable: true },
-    { name: 'cantidad', label: 'Cantidad', field: 'quantity', sortable: true },
-    { name: 'precio', label: 'Precio', field: 'price' },
-    { name: 'tax_rate', label: 'Tasa de impuesto (%)', field: 'tax_rate' },
+    { name: 'identificationDocumentId', align: 'center', label: 'Tipo de documento', field: 'identificationDocumentId', sortable: true },
+    { name: 'identification', label: 'Identificacion', field: 'identification', sortable: true },
+    { name: 'email', label: 'Correo', field: 'email' },
+    { name: 'phone', label: 'Telefono', field: 'phone' },
 ]
+
+
 
 const rows = ref([])
 
-const NuevaFactura = ref({
-    legalOrganizationId: '',
-    identificationDocumentId: '',
+const tiposDeOrganizacion = [
+    { id: 1, name: 'Persona Jurídica' },
+    { id: 2, name: 'Persona Natural' },
+]
+
+const cambioDeOrganizacion = () => {
+    if (NuevoCliente.value.legalOrganizationId === 1) {
+        // Si es Persona Jurídica, vaciar el campo 'names'
+        NuevoCliente.value.names = '';
+    } else {
+        // Si es Persona Natural, vaciar campos de empresa y nombre comercial
+        NuevoCliente.value.company = '';
+        NuevoCliente.value.tradeName = '';
+    }
+}
+
+const tiposDeDocumento = ref([
+    { label: 'Registro civil', value: 1 },
+    { label: 'Tarjeta de identidad', value: 2 },
+    { label: 'Cédula de ciudadanía', value: 3 },
+    { label: 'Tarjeta de extranjería', value: 4 },
+    { label: 'Cédula de extranjería', value: 5 },
+    { label: 'NIT', value: 6 },
+    { label: 'Pasaporte', value: 7 },
+    { label: 'Documento de identificación extranjero', value: 8 },
+    { label: 'PEP', value: 9 },
+    { label: 'NIT otro país', value: 10 },
+    { label: 'NUIP', value: 11 }
+]);
+
+
+const tributeOptions = ref([
+    { label: 'IVA', value: 18 },
+    { label: 'No aplica', value: 21 }
+]);
+
+const getMunicipalityOptions = async () => {
+    try {
+
+        const response = await getData('/v1/municipalities?name=&code=');
+        if (response.data && Array.isArray(response.data)) {
+            municipalityOptions.value = response.data.map(item => ({
+                label: item.name, value: item.id
+            }));    
+        } else {
+            console.error('Estructura inesperada en la respuesta:', response.data);
+        }
+    } catch (error) {
+        console.error('Error al obtener los datos:', error);
+    }
+}
+
+async function getClientes() {
+    try {
+        const response = await getDataBackend('customers');
+        rows.value = response;
+        console.log(response);
+    } catch (error) {
+
+        console.error('Error cargando clientes:', error);
+    }
+}
+
+const NuevoCliente = ref({
+    legalOrganizationId: null,
+    identificationDocumentId: null,
     identification: '',
     dv: '',
     names: '',
@@ -161,69 +227,38 @@ const NuevaFactura = ref({
     company: '',
     tradeName: '',
     tributeId: '',
-    municipalityId: ''
+    municipalityId: null,
 })
 
-const formValido = computed(() => {
-    return NuevaFactura.value.legalOrganizationId &&
-        NuevaFactura.value.identificationDocumentId &&
-        NuevaFactura.value.identification &&
-        NuevaFactura.value.dv &&
-        NuevaFactura.value.names &&
-        NuevaFactura.value.addres &&
-        NuevaFactura.value.email &&
-        NuevaFactura.value.phone &&
-        NuevaFactura.value.company &&
-        NuevaFactura.value.tradeName &&
-        NuevaFactura.value.tributeId &&
-        NuevaFactura.value.municipalityId
-})
 
-onMounted(async () => {
-    await getMunicipalityOptions()
-})
 
-const postFactura = async () => {
+const postCliente = async () => {
+    const newCustomer = {
+        ...NuevoCliente.value,
+        identification: String(NuevoCliente.value.identification),
+        municipalityId: Number(NuevoCliente.value.municipalityId),
+        legalOrganizationId: Number(NuevoCliente.value.legalOrganizationId),
+        tributeId: Number(NuevoCliente.value.tributeId),
+        identificationDocumentId: Number(NuevoCliente.value.identificationDocumentId),
+    };
+
     try {
-        NuevaFactura.value.legalOrganizationId = (NuevaFactura.value.legalOrganizationId || '').trim();
-        NuevaFactura.value.identificationDocumentId = (NuevaFactura.value.identificationDocumentId || '').trim();
-        NuevaFactura.value.identification = (NuevaFactura.value.identification || '').trim();
-        NuevaFactura.value.dv = (NuevaFactura.value.dv || '').trim();
-        NuevaFactura.value.names = (NuevaFactura.value.names || '').trim();
-        NuevaFactura.value.addres = (NuevaFactura.value.addres || '').trim();
-        NuevaFactura.value.email = (NuevaFactura.value.email || '').trim();
-        NuevaFactura.value.phone = (NuevaFactura.value.phone || '').trim();
-        NuevaFactura.value.company = (NuevaFactura.value.company || '').trim();
-        NuevaFactura.value.tradeName = (NuevaFactura.value.tradeName || '').trim();
-        NuevaFactura.value.tributeId = (NuevaFactura.value.tributeId || '').trim();
-        NuevaFactura.value.municipalityId = (NuevaFactura.value.municipalityId || '').trim();
 
-        console.log(NuevaFactura.value);
+        const response = await postDataBackend('customers', newCustomer);
+        console.log(response);
 
-        const response = await postDataBackend('factura', NuevaFactura.value);
-        console.log('Factura creada con exito', response);
         dialog.value = false;
-
+        await getClientes();
     } catch (error) {
-        console.error('Error al crear la factura', error.response ? error.response.data : error);
+        console.error('Error al guardar cliente:', error);
     }
 };
 
-async function getMunicipalityOptions() {
-    try {
-        const response = await getData('/v1/municipalities?name=')
-        if (response.data && Array.isArray(response.data)) {
-            municipalityOptions.value = response.data.map(item => ({ label: item.name, value: item.id }));
-            console.log("Municipios obtenidos", municipalityOptions.value);
-        } else {
-            console.error("La respuesta no contiene los datos esperados");
-        }
-    } catch (error) {
-        console.log("Error al obtener los municipios", error.response ? error.response.data : error);
-    }
-}
 
-
+onMounted(async () => {
+    await getMunicipalityOptions();
+    await getClientes()
+});
 </script>
 
 <style>
