@@ -94,8 +94,8 @@
                                     <q-btn icon="add" color="primary" label="Añadir Retención" @click="addTax" flat />
                                 </div>
                                 <div style="display: flex; justify-content: center;">
-                                    <q-btn @click="postProducto" label="Crear Producto"
-                                        style="width: 180px; height: 50px; background-color: rgb(0,62,133); color: white" />
+                                    <q-btn label="Cancelar" color="grey" flat @click="resetForm" />
+                                    <q-btn type="submit" label="Guardar" color="primary" unelevated @click="updateProduct" />
                                 </div>
                             </div>
 
@@ -255,6 +255,20 @@ const postProducto = async () => {
         console.error('Error al guardar producto:', error);
     }
 };
+
+const resetForm = () => {
+    NuevoProducto.value = {
+        codeReference: '',
+        name: '',
+        price: 0,
+        unit_measure_id: null,
+        tax_rate: 19,
+        is_excluded: false,
+        standard_code_id: null,
+        tribute_id: null,
+        withholding_taxes: []
+    }
+}
 
 
 

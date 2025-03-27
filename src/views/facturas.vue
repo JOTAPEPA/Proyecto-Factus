@@ -1,118 +1,112 @@
 <template>
-    <q-layout view="hHh lpR fFf">
+     <q-layout view="hHh lpR fFf">
 
-        <q-header height-hint="98" id="headerHome">
-            <q-toolbar>
-                <q-toolbar-title id="titleBar">
-                    <q-avatar>
-                    </q-avatar>
-                    Factus
-                </q-toolbar-title>
-            </q-toolbar>
-            <q-tabs align="center">
-                <q-route-tab to="/facturas" label="Facturas" />
-                <q-route-tab to="/productos" label="Productos" />
-                <q-route-tab to="/clientes" label="Clientes" />
-            </q-tabs>
-        </q-header>
-        <q-page-container>
-            <div class="q-pa-md q-gutter-sm">
-                <q-btn v-for="filter in backdropFilterList" :key="filter.label" color="primary" :label="filter.label"
-                    no-caps @click="filter.onClick" />
+<q-header height-hint="98" id="headerHome">
+    <q-toolbar>
+        <q-toolbar-title id="titleBar">
+            <q-avatar>
+            </q-avatar>
+            Factus
+        </q-toolbar-title>
+    </q-toolbar>
+    <q-tabs align="center">
+        <q-route-tab to="/facturas" label="Facturas" />
+        <q-route-tab to="/productos" label="Productos" />
+        <q-route-tab to="/clientes" label="Clientes" />
+    </q-tabs>
+</q-header>
 
-                <q-dialog v-model="dialog" :backdrop-filter="backdropFilter">
-                    <q-card>
-                        <q-card-section class="row items-center q-pb-none text-h6">
-                            Dialog
-                        </q-card-section>
+<q-page-container>
+    <div class="q-pa-md q-gutter-sm" id="modalItems">
+        <q-btn style="background-color: rgb(0,62,133); color: white;" v-for="filter in backdropFilterList"
+            :key="filter.label" :label="filter.label" no-caps @click="filter.onClick" />
 
-                        <q-card-section>
-                            This dialog has a backdrop filter of {{ backdropFilter }}.
-                        </q-card-section>
+        <q-dialog v-model="dialog" :backdrop-filter="backdropFilter">
+            <q-card style="max-width: 100%;">
+                <q-card-section class="row items-center q-pb-none text-h6">
+                </q-card-section>
 
-                        <q-card-section class="q-pt-none">
-                            <h5 style="text-align: center;">Cliente</h5>
-                            <div class="cliente">
-                                <div>
-                                    <q-input outlined v-model="NuevaFactura.legalOrganizationId" label="Tipo de cliente"
-                                        filled class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El tipo de cliente es obligatorio']" />
+                <q-card-section>
+                    <h5 style="text-align: center;">Cliente</h5>
+                    <div>
+                        <q-select outlined v-model="NuevoCliente.legalOrganizationId"
+                            :options="tiposDeOrganizacion" option-value="id" option-label="name"
+                            label="Tipo de persona" emit-value map-options filled class="custom-input"
+                            :rules="[val => !!val || 'Este campo es requerido']"
+                            @update:model-value="cambioDeOrganizacion" />
+                    </div>
 
-                                    <q-input outlined v-model="NuevaFactura.identificationDocumentId"
-                                        label="Tipo de identificacion" filled class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El tipo de identificacion es obligatorio']" />
+                    <div class="cliente">
+                        <div>
 
-                                    <q-input outlined v-model="NuevaFactura.identification"
-                                        label="numero de identificacion" filled class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El numero de identificacion es obligatorio']" />
+                            <q-input v-if="NuevoCliente.legalOrganizationId === 1"
+                                v-model="NuevoCliente.company" label="Razón Social" filled
+                                class="custom-input" />
 
-                                    <q-input outlined v-model="NuevaFactura.dv" label="dv" filled class="custom-input"
-                                        type="String"
-                                        :rules="[val => val && val.length > 0 || 'El dv es obligatorio']" />
+                            <q-input v-if="NuevoCliente.legalOrganizationId === 1"
+                                v-model="NuevoCliente.tradeName" label="Nombre comercial" filled
+                                class="custom-input" />
 
-                                </div>
+                            <q-input v-if="NuevoCliente.legalOrganizationId === 2" v-model="NuevoCliente.names"
+                                label="Nombre completo" filled class="custom-input" />
 
-                                <div>
-                                    <q-input outlined v-model="NuevaFactura.names" label="Nombre" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El nombre es obligatorio']" />
+                            <q-select outlined v-model="NuevoCliente.identificationDocumentId"
+                                :options="tiposDeDocumento" label="Tipo de identificacion" filled emit-value
+                                map-options class="custom-input"
+                                :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.addres" label="Direccion" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'La direccion es obligatoria']" />
+                            <q-input outlined v-model="NuevoCliente.identification" label="identificacion"
+                                filled class="custom-input"
+                                :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.email" label="Correo electronico" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El correo electronico es obligatorio']" />
+                        </div>
 
-                                    <q-input outlined v-model="NuevaFactura.phone" label="Telefono" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El telefono es obligatorio']" />
-                                </div>
+                        <div>
+                            <q-select outlined v-model="NuevoCliente.tributeId" :options="tributeOptions"
+                                label="Tributo" filled class="custom-input" emit-value map-options
+                                :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                <div>
-                                    <q-input outlined v-model="NuevaFactura.company" label="Compañia" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'La compañia es obligatoria']" />
+                            <q-input outlined v-model="NuevoCliente.addres" label="Direccion" filled
+                                class="custom-input" :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.tradeName" label="Trade Name" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El trade name es obligatorio']" />
+                            <q-input outlined v-model="NuevoCliente.email" label="Correo electronico" filled
+                                class="custom-input" :rules="[val => !!val || 'Este campo es requerido']" />
 
-                                    <q-input outlined v-model="NuevaFactura.tributeId" label="Tributo" filled
-                                        class="custom-input" type="String"
-                                        :rules="[val => val && val.length > 0 || 'El tributo es obligatorio']" />
 
-                                    <q-select outlined v-model="NuevaFactura.municipalityId"
-                                        :options="municipalityOptions" label="Municipio" filled class="custom-input"
-                                        type="String"
-                                        :rules="[val => val && val.length > 0 || 'El municipio es obligatorio']" />
+                        </div>
 
-                                </div>
+                        <div>
 
-                            </div>
+                            <q-input outlined v-model="NuevoCliente.phone" label="Telefono" filled
+                                class="custom-input" type="tel"
+                                :rules="[val => !!val || 'Este campo es requerido']" />
 
-                            <h5 style="text-align: center;">Productos</h5>
-                            <div class="Productos">
+                            <q-select outlined v-model="NuevoCliente.municipalityId"
+                                :options="municipalityOptions" label="Municipio" filled class="custom-input"
+                                emit-value map-options type="String"
+                                :rules="[val => val !== null || 'El municipio es obligatorio']" />
+                        </div>
 
-                            </div>
-                        </q-card-section>
-                        <q-card-actions align="right">
-                            <q-btn flat label="Crear" color="primary" @click="postFactura" />
-                        </q-card-actions>
-                        <q-card-actions align="right">
-                            <q-btn flat label="Close" color="primary" v-close-popup />
-                        </q-card-actions>
-                    </q-card>
-                </q-dialog>
-            </div>
-            <div class="q-pa-md">
-                <q-table style="height: 400px" flat bordered title="Facturas" :rows="rows" :columns="columns"
-                    row-key="index" virtual-scroll v-model:pagination="pagination" :rows-per-page-options="[0]" />
-            </div>
+                    </div>
+                </q-card-section>
 
-        </q-page-container>
-    </q-layout>
+                <q-card-actions align="right">
+                    <q-btn flat label="Close" color="primary" v-close-popup />
+                    <q-btn flat label="Crear" color="primary" @click="postCliente" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+    </div>
+
+
+
+    <div class="q-pa-md">
+        <q-table flat bordered :rows="rows" :columns="columns" row-key="name" />
+    </div>
+
+</q-page-container>
+
+</q-layout>
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue'
